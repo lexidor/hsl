@@ -1,0 +1,5 @@
+{
+  "allowDirectMerges": true,
+  "allowBotCommands": false,
+  "internalRepository": "www"
+}
