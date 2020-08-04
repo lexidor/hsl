@@ -232,6 +232,54 @@ function keys<Tk, Tv>(
 }
 
 /**
+ * Returns the last element of a given vec and removes it from the vec.
+ * Throws if the given vec is empty.
+ * Previously known as `array_pop` in PHP.
+ *
+ * @see `Vec\pop_front()` to remove the first element instead.
+ *
+ * Time complexity: O(either 1 or n) 1 if no other references are being held.
+ *   n if the vec needs to be copied.
+ * Space complexity: O(either 1 or n) 1 if no other references are being held.
+ *   n if the vec needs to be copied.
+ */
+<<__NonRx('Mutates the argument it is given')>>
+function pop_back<T>(inout vec<T> $vec): T {
+  invariant(
+    !C\is_empty($vec),
+    '%s: Expected at least one element.',
+    __FUNCTION__,
+  );
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
+  return \array_pop(inout $vec);
+}
+
+/**
+ * Returns the first element of a given vec and removes it from the vec.
+ * Throws if the given vec is empty.
+ * Previously known as `array_shift` in PHP.
+ *
+ * @see `Vec\pop_back()` to remove the last element instead.
+ *
+ * Time complexity: O(either 1 or n) 1 if no other references are being held.
+ *   n if the vec needs to be copied.
+ * Space complexity: O(either 1 or n) 1 if no other references are being held.
+ *   n if the vec needs to be copied.
+ */
+<<__NonRx('Mutates the argument it is given')>>
+function pop_front<T>(inout vec<T> $vec): T {
+  invariant(
+    !C\is_empty($vec),
+    '%s: Expected at least one element.',
+    __FUNCTION__,
+  );
+  /* HH_FIXME[2049] __PHPStdLib */
+  /* HH_FIXME[4107] __PHPStdLib */
+  return \array_shift(inout $vec);
+}
+
+/**
  * Returns a new vec containing an unbiased random sample of up to
  * `$sample_size` elements (fewer iff `$sample_size` is larger than the size of
  * `$traversable`).

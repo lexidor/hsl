@@ -367,6 +367,65 @@ final class VecSelectTest extends HackTest {
     expect(Vec\keys($traversable))->toEqual($expected);
   }
 
+  public function providePop(): vec<(vec<mixed>)> {
+    return vec[
+      tuple(vec[1]),
+      tuple(vec[1, 2]),
+      tuple(vec[1, 2, 3]),
+      tuple(vec['first', 'middle', 'last']),
+    ];
+  }
+
+  <<DataProvider('providePop')>>
+  public function testPopBackNonEmpty(vec<mixed> $vec): void {
+    $copy = $vec;
+    $return = Vec\pop_back(inout $vec);
+
+    expect($return)->toEqual(
+      C\lastx($copy),
+      'pop_back must return the last element',
+    );
+
+    expect(C\count($copy) - 1)->toEqual(
+      C\count($vec),
+      'pop_back must remove an element',
+    );
+
+    $vec[] = $return;
+    expect($vec)->toEqual($copy, 'pop_back must remove the last element');
+  }
+
+  <<DataProvider('providePop')>>
+  public function testPopFrontNonEmpty(vec<mixed> $vec): void {
+    $copy = $vec;
+    $return = Vec\pop_front(inout $vec);
+
+    expect($return)->toEqual(
+      C\firstx($copy),
+      'pop_front must return the first element',
+    );
+
+    expect(C\count($copy) - 1)->toEqual(
+      C\count($vec),
+      'pop_front must remove an element',
+    );
+
+    $vec = Vec\concat(vec[$return], $vec);
+    expect($vec)->toEqual($copy, 'pop_front must remove the first element');
+  }
+
+  public function testPopThrowsForEmptyVec(): void {
+    $empty = vec[];
+    expect(() ==> Vec\pop_back(inout $empty))->toThrow(
+      InvariantException::class,
+      'at least one element',
+    );
+    expect(() ==> Vec\pop_front(inout $empty))->toThrow(
+      InvariantException::class,
+      'at least one element',
+    );
+  }
+
   public static function provideTestSample(): varray<mixed> {
     return varray[
       tuple(
